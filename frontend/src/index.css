@@ -1,1 +1,55 @@
 @import "tailwindcss";
+
+:root {
+  --cream-bg: #F6EEDF;
+  --cream-paper: #FBF6ED;
+  --coral-red: #C04A3E;
+  --coral-dark: #9E372D;
+  --teal: #267A75;
+  --teal-dark: #1B5854;
+  --marigold: #EAA536;
+  --text-dark: #2D2322;
+  --text-muted: #6B5D5C;
+  --card-bg: #F2E9DB;
+  --card-border: #E2D7C5;
+  --note-yellow: #FAF0A8;
+  --note-tan: #EBE0CD;
+  --font-serif: 'DM Serif Display', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-handwritten: 'Caveat', cursive;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--cream-bg);
+  color: var(--text-dark);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
