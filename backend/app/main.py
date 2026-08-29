@@ -2,6 +2,10 @@ from fastapi import FastAPI
 from google import genai
 import os
 from dotenv import load_dotenv
+from app.database import engine, Base
+from app.models import conversation 
+
+Base.metadata.create_all(bind=engine)
 
 load_dotenv()
 app = FastAPI()
