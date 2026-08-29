@@ -37,10 +37,10 @@ const SaheliLanding = () => {
       <Footer />
 
       {/* Frontend-Only Chatbot Drawer */}
-      <ChatbotDrawer 
-        isOpen={isChatOpen} 
-        onClose={handleCloseChat} 
-        initialPrompt={initialPrompt} 
+      <ChatbotDrawer
+        isOpen={isChatOpen}
+        onClose={handleCloseChat}
+        initialPrompt={initialPrompt}
       />
     </div>
   );
