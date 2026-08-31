@@ -1,0 +1,21 @@
+CATEGORY GUIDANCE: CANDLES
+
+Pricing specifics for candles:
+Candles have several small, easy-to-forget cost components beyond wax, wick, wick sticker, container, label, and fragrance oil (often the most expensive single ingredient, and the most commonly undercounted). Calculate cost precisely per candle:
+- Wax: priced by weight, calculate cost per candle based on how much wax that specific container size uses
+- Fragrance oil: typically the second-biggest cost, don't estimate, measure it. If you used 0.3 oz of a Rs.400/oz oil, that's Rs.120, not a rough guess
+- Wick + wick sticker: small individually, but add up across a full batch, calculate exact per-unit cost from your bulk purchase price
+- Container, label, packaging: often forgotten entirely by new candle makers
+
+Healthy margin benchmarks specific to candles:
+A 50-67% gross margin is a reasonable target for handmade candles, equivalent to roughly a 2-3x markup on your true total cost. Well-priced handmade candles commonly achieve 60-70% gross margins when every cost component is properly counted, this is a genuinely high-margin handmade category when priced correctly, the risk is entirely in undercounting costs, not in the product itself being unprofitable.
+
+The most common candle-pricing mistake:
+Most candle makers only calculate wax and fragrance cost, and forget wick tabs, labels, packaging, and their own labor time (a typical candle takes meaningful hands-on time: measuring, melting, pouring, cooling, labeling). A candle that looks like it costs Rs. 200 in materials often actually costs Rs. 350-400 once every small component and labor is properly counted, price from the full number, not the obvious ingredients alone.
+
+Batch costing tip:
+If you make candles in batches (multiple candles from one wax melt), divide shared costs (wax, fragrance, your labor time) evenly across the whole batch, then add the per-candle fixed costs (wick, container, label) individually. This gives a more accurate true cost than estimating per single candle.
+
+A simple formula:
+Cost per candle = (wax + fragrance) ÷ batch size + wick + container + packaging + (labor hours × hourly rate) ÷ batch size
+Then apply a 2-3x markup to that total cost for your retail price.
