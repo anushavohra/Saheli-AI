@@ -1,3 +1,5 @@
+from urllib import response
+
 from fastapi import FastAPI
 from fastapi import UploadFile, File, Form
 from groq import Groq
@@ -6,6 +8,7 @@ from dotenv import load_dotenv
 from app.database import engine, Base, SessionLocal
 from app.models import conversation, seller_listing
 from app.models.seller_listing import Seller
+from app.models.seller_listing import Listing
 from app.models.conversation import Conversation
 import chromadb
 import re
@@ -162,6 +165,7 @@ When reviewing a shop, product, or listing, use this exact structure:
 Do not add a separate section for rewritten text, fold the ready-to-use rewrite into the improvement itself.
 
 ## PERSONALIZATION IN DUKAN KI BAAT
+Before writing a full review, check whether the photo actually matches the product title and description. If the photo shows something clearly unrelated to the product (wrong item, wrong category, or no product visible at all), do NOT write a full strength/improvements/goal review. Instead, briefly and kindly explain that the photo doesn't seem to match the listing, and ask the seller to upload a photo of the actual product. Do not guess or review based on unrelated context.
 
 If the seller's business context (shop name, category, bio, past conversation history) is available, use it directly in the review:
 
@@ -356,14 +360,17 @@ async def review_shop(
     shop_bio: str = Form(...),
     session_id: str = Form(...)
 ):
-    photo_bytes = await photo.read()
-    base64_image = base64.b64encode(photo_bytes).decode('utf-8')
     db = SessionLocal()
+
     seller = db.query(Seller).filter(Seller.session_id == session_id).first()
     if seller:
         seller_context = f"Seller's shop: {seller.shop_name}, Category: {seller.category}, Bio: {seller.bio}"
     else:
         seller_context = ""
+
+    photo_bytes = await photo.read()
+    base64_image = base64.b64encode(photo_bytes).decode('utf-8')
+
     response = groq_client.chat.completions.create(
         model="qwen/qwen3.6-27b",
         messages=[
@@ -390,9 +397,22 @@ Please review this shop following the Dukan Ki Baat structure."""
             }
         ],
         reasoning_format="hidden",
-        max_completion_tokens=3000
+        max_completion_tokens=4000
     )
+ 
+    print("RAW RESPONSE:", response.choices[0].message.content)
+    print("FINISH REASON:", response.choices[0].finish_reason)
 
-    return {"review": clean_response(response.choices[0].message.content)}
+    cleaned_review = clean_response(response.choices[0].message.content)
 
+    new_listing = Listing(
+        session_id=session_id,
+        title=title,
+        description=description,
+        review_result=cleaned_review
+    )
+    db.add(new_listing)
+    db.commit()
+    db.close()
 
+    return {"review": cleaned_review}

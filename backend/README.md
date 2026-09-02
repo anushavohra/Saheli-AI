@@ -1,14 +1,14 @@
-Absolutely. Based on everything you've done so far with **Saheli**, I'd make the README describe the project as an actual AI assistant rather than just a collection of technologies. It should document the purpose, current architecture, setup, what you've implemented, and the work still in progress.
-
-Here’s a README you can put directly in the repository:
-
 # Saheli AI 🌸
 
 **Saheli AI** is an AI-powered assistant designed to support Pakistani women running small, home-based businesses.
 
-Many women run businesses from home while balancing family responsibilities, limited time, limited budgets, and little access to formal business guidance. Saheli aims to provide practical, personalized support that helps sellers make better decisions about their businesses instead of simply giving generic advice.
+Many women run businesses from home while balancing family responsibilities, limited time, limited budgets, and little access to formal business guidance. Saheli aims to provide practical, personalized support that helps sellers make better decisions about their businesses, instead of simply giving generic advice.
 
-## 🎯 Problem
+This document explains, in simple terms, what Saheli is, what's been built so far, and exactly how to get it running on your own computer. No prior backend experience needed, just follow the steps in order.
+
+---
+
+## 🎯 The Problem
 
 Home-based sellers often know how to make their products but struggle with the business side of selling them.
 
@@ -23,51 +23,51 @@ Common challenges include:
 * Knowing what to do when sales are slow
 * Feeling uncertain or discouraged about their business
 
-Saheli is designed to make this support more accessible through a simple conversational AI assistant.
+Saheli is designed to make this kind of support more accessible through a simple, conversational AI assistant.
 
 ---
 
-# 💡 What Saheli Does
+## 💡 What Saheli Does
 
-Saheli currently has two main components:
+Saheli has two main features.
 
 ### Ask Saheli
 
-A conversational AI assistant where sellers can ask questions about their business.
+A conversational feature where sellers can ask business questions and get answers grounded in a real knowledge base, not just generic AI guesses.
 
-Instead of giving generic business advice, Saheli is designed to:
+Saheli is designed to:
 
-* Understand the seller's specific situation
-* Use information the seller has already provided
-* Give practical, relevant answers
-* Use the project's knowledge base when answering factual questions
-* Ask for missing information when necessary
+* Understand the seller's specific situation, not answer generically
+* Use information the seller has already shared (shop name, category, past conversation)
+* Ask for missing information when needed, instead of over-explaining
 * Perform calculations using the seller's actual numbers
-* Help the seller complete tasks rather than simply explaining how to do them
+* Help the seller complete a task, rather than just explaining how to do it
 
-For example, instead of only explaining a pricing formula, Saheli should ask for the seller's actual material cost, time, and other relevant information and calculate a useful price with them.
+**Example — the difference this makes:**
+
+❌ Less useful:
+> Seller: "How should I price my crochet keychain?"
+> Saheli: "Add the material cost, labor cost, and profit margin using this formula..."
+
+This leaves the seller to do the work herself.
+
+✅ Intended behavior:
+> Seller: "My yarn costs Rs. 300, packaging is Rs. 80, and it takes me 2 hours."
+> Saheli uses those actual numbers, calculates the real cost and a suggested price, and explains it simply, no homework left for the seller.
 
 ### Dukan Ki Baat
 
-A shop and product review feature that provides focused feedback on a seller's shop, product, or listing.
+A shop and product review feature. A seller uploads a photo, title, description, and shop bio, and gets a focused, structured review:
 
-The review focuses on:
+1. **One genuine strength**
+2. **One or two specific improvements** — each with 2 ready-to-use rewrite options the seller can copy directly, not just advice on what to change
+3. **One small, achievable weekly goal**
 
-1. One genuine strength
-2. One or two specific improvements
-3. One small and achievable weekly goal
-
-The feedback is intended to be practical and encouraging without overwhelming beginners.
+If the uploaded photo doesn't actually match the listing (wrong item, or no product visible), Saheli won't force a fake review, she'll simply point that out and ask for the right photo.
 
 ---
 
-# 🧠 AI Approach
-
-Saheli is being developed as a **grounded AI assistant**, rather than a chatbot that relies entirely on the model's general knowledge.
-
-The project uses a knowledge base to provide reliable information relevant to Pakistani women and small businesses.
-
-The planned architecture includes:
+## 🧠 How Saheli Actually Works (Architecture)
 
 ```text
 Seller
@@ -78,10 +78,10 @@ Frontend
    ▼
 FastAPI Backend
    │
-   ├──────────────► Saheli AI
+   ├──────────────► Ask Saheli / Dukan Ki Baat logic
    │                    │
    │                    ▼
-   │              LLM / Groq
+   │              Groq (LLM + Vision)
    │
    ├──────────────► Knowledge Base
    │                    │
@@ -92,420 +92,293 @@ FastAPI Backend
    │                ChromaDB
    │
    ▼
-Conversation / Seller Data
+Postgres Database (Neon)
+(Conversations, Sellers, Listings)
 ```
 
-The goal is to combine:
-
-* LLM-based conversation
-* Retrieval from a relevant knowledge base
-* Seller-specific context
-* Persistent conversation data
-* Practical task assistance
+**In plain terms:**
+- **FastAPI** is the "reception desk," it receives requests from the app and sends replies back.
+- **Groq** is where the actual AI thinking happens, we use it for both plain text chat and reading product photos.
+- **ChromaDB** stores our written business guidance so Saheli's answers are grounded in real information, not guesses.
+- **Postgres (via Neon)** is where we permanently save conversations, seller profiles, and product review history.
 
 ---
 
-# 🛠️ Technology Stack
+## 🛠️ Technology Stack
 
-## Backend
+### Backend
+- **Python**
+- **FastAPI**
+- **SQLAlchemy**
+- **PostgreSQL** (hosted on Neon) — used instead of SQLite so data is shared across the team and persists reliably
+- **python-dotenv**
 
-* **Python**
-* **FastAPI**
-* **Groq API**
-* **ChromaDB**
-* **SQLAlchemy**
-* **SQLite**
-* **python-dotenv**
+### AI / RAG
+- **Groq API** — hosts both the text model and the vision (photo-reading) model, free tier, no billing required
+- **ChromaDB** — vector database for our knowledge base
+- Retrieval-Augmented Generation (RAG) — Saheli looks up relevant guidance before answering, instead of relying purely on the AI's general training
 
-## AI / RAG
-
-* Large Language Model through Groq
-* Embeddings
-* Vector database
-* Retrieval-Augmented Generation (RAG)
-* Knowledge-base grounded responses
-
-## Development
-
-* Git
-* GitHub
-* Python virtual environment
-* VS Code
+### Development
+- Git & GitHub
+- Python virtual environment
+- VS Code
 
 ---
 
-# 📁 Project Structure
+## 🤖 A Note on Which AI Models We Use, and Why
 
-The backend is currently organized approximately as follows:
+We originally planned to use **Google's Gemini** for reading product photos in Dukan Ki Baat, since it handles images directly. However, Gemini's free tier requires billing to be enabled to keep using it, so we switched to **Groq** instead, which is genuinely free.
+
+Groq now powers both features, using two different models for two different jobs:
+
+| Feature | Model | Why |
+|---|---|---|
+| Ask Saheli (text only) | `openai/gpt-oss-120b` | General-purpose, handles our detailed persona and instructions well |
+| Dukan Ki Baat (needs to read photos) | `qwen/qwen3.6-27b` | One of the few models on Groq that can actually understand images |
+
+*(Note: our very first model choice, `llama-3.3-70b-versatile`, was deprecated by Groq partway through development, this is why the code now uses `openai/gpt-oss-120b` instead.)*
+
+Gemini's API key is still kept in the project for future use, in case billing gets enabled later or the team wants image quality closer to Gemini's.
+
+---
+
+## 🧾 Saheli's Personality (System Prompt)
+
+A significant part of development has gone into designing how Saheli actually talks. She's built to be:
+
+- Warm, but not falsely cheerful or over-the-top ("my dear," excessive exclamation marks, etc. are deliberately avoided)
+- Beginner-friendly, no business jargon
+- Specific to the seller's actual situation, never a copy-paste answer that could apply to anyone
+- Honest, she doesn't promise success or say "everything will be fine" without basis
+- Focused, she doesn't turn every message into a checklist or force a weekly goal onto a casual question
+
+**Design principle:** *Listen first. Understand the seller's actual problem. Then help them solve it — don't just explain how she could solve it herself.*
+
+Before every response, the system is designed to ask: what did the seller actually say, what do we already know about her, and what's the smallest useful thing we can do right now?
+
+---
+
+## 📁 Project Structure
 
 ```text
 backend/
 │
 ├── app/
 │   ├── models/
-│   │   ├── conversation.py
-│   │   └── seller_listing.py
+│   │   ├── conversation.py       # chat message history
+│   │   └── seller_listing.py     # seller profiles + product listing reviews
 │   │
-│   ├── database.py
-│   └── ...
+│   ├── knowledge_base/           # plain text guidance files (pricing, photography, etc.)
+│   ├── database.py               # database connection setup
+│   ├── load_knowledge_base.py    # loads knowledge_base/ files into ChromaDB
+│   └── main.py                   # the actual FastAPI app and endpoints
 │
-├── main.py
-├── .env
+├── .env                          # your API keys (never shared publicly)
 ├── .gitignore
 ├── requirements.txt
-└── ...
+└── venv/                         # your local virtual environment (not shared/committed)
 ```
-
-> The structure may change as development continues.
 
 ---
 
-# 🗄️ Database
+## 🗄️ Database
 
-Saheli uses a database to store application data.
+We use **PostgreSQL**, hosted for free on **Neon**, accessed through **SQLAlchemy**.
 
-The backend currently uses:
+Three tables currently exist:
+- **`conversations`** — every message sent in Ask Saheli, tied to a `session_id`
+- **`sellers`** — one profile per seller (shop name, category, bio), tied to a `session_id`
+- **`listings`** — one row per product reviewed through Dukan Ki Baat, tied to a `session_id`
 
-* **SQLAlchemy** for database interaction
-* **SQLite** for local development
-
-Models currently include conversation and seller listing related data.
-
-The database layer includes:
-
-```python
-engine
-Base
-SessionLocal
-```
-
-This allows the application to create database sessions and interact with stored seller/conversation information.
+### A note on `session_id`
+Every seller is identified by a `session_id`, a text label you choose (like `"zara123"`). One seller can have many chat messages AND many product listings, all tied together under the same ID. Always reuse the same `session_id` for the same seller, that's what lets Saheli remember her across requests.
 
 ---
 
-# 🔎 ChromaDB
+## 🔎 Knowledge Base & ChromaDB
 
-ChromaDB is being used as the vector database for Saheli's knowledge base.
+We've written detailed, fact-based guidance covering:
+- Pricing
+- Product photography
+- Product listings/descriptions
+- WhatsApp selling
+- Instagram selling
+- Category-specific guidance: jewelry, baked goods, embroidery, candles, crochet & knitting, and clay crafts
 
-The general RAG pipeline is:
+This lives in `backend/app/knowledge_base/` as plain text files. The RAG (retrieval) pipeline works like this:
 
 ```text
-Knowledge Documents
-        │
-        ▼
-    Chunking
-        │
-        ▼
-   Embeddings
-        │
-        ▼
-    ChromaDB
-        │
-        ▼
-Relevant Information
-        │
-        ▼
-       LLM
-        │
-        ▼
-Saheli Response
+Knowledge Documents → Chunking → Embeddings → ChromaDB → Relevant Info → LLM → Saheli's Response
 ```
 
-This allows Saheli to retrieve relevant information before generating an answer.
-
----
-
-# 🤖 LLM
-
-Saheli currently communicates with an LLM through **Groq**.
-
-The project initially used:
-
-```text
-llama-3.3-70b-versatile
-```
-
-but this model was no longer available, so the implementation was updated to:
-
-```text
-openai/gpt-oss-120b
-```
-
-The model is accessed through the Groq Python client.
-
-Example:
-
-```python
-from groq import Groq
-
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+To load or refresh this content into ChromaDB (only needed once, or after editing guidance content):
+```bash
+python -m app.load_knowledge_base
 ```
 
 ---
 
-# 🧾 Saheli System Prompt
+## 🔐 Environment Variables
 
-A major part of the development work has been designing Saheli's system prompt.
-
-The prompt establishes Saheli as:
-
-* Warm
-* Grounded
-* Beginner-friendly
-* Practical
-* Non-judgmental
-* Specific to the seller's situation
-
-An important design decision was made around **doing the work instead of simply explaining it**.
-
-For example:
-
-### ❌ Less useful
-
-Seller:
-
-> How should I price my crochet keychain?
-
-Saheli:
-
-> Add the material cost, labor cost and profit margin using this formula...
-
-This leaves the seller to do the work themselves.
-
-### ✅ Intended behavior
-
-Seller:
-
-> My yarn costs Rs. 300, I use about Rs. 80 per keychain and it takes me 2 hours.
-
-Saheli should use those actual numbers, calculate the relevant costs, and help the seller arrive at a usable price.
-
-If information is missing, Saheli should ask for the specific missing information rather than giving the seller a formula and sending them away to calculate it themselves.
-
----
-
-# 🌸 Design Philosophy
-
-Saheli is not intended to be a generic motivational chatbot.
-
-The core principle is:
-
-> **Listen first. Understand the seller's actual problem. Then help them solve it.**
-
-Saheli should avoid responses that could be copied and given to any business owner.
-
-For every response, the system should consider:
-
-* What exactly did the seller ask?
-* What information have they already given?
-* What can Saheli do for them directly?
-* What information is missing?
-* What is the smallest useful next step?
-
-The goal is to make the assistant feel like someone who is actually listening to the seller.
-
----
-
-# 🔐 Environment Variables
-
-Create a `.env` file in the backend directory:
+Create a `.env` file inside `backend/`:
 
 ```env
 GROQ_API_KEY=your_groq_api_key
+GEMINI_API_KEY=your_gemini_api_key
+DATABASE_URL=your_shared_neon_database_url
 ```
 
-Do **not** commit the `.env` file to GitHub.
-
-The `.gitignore` should include:
-
+**Never commit `.env` to GitHub.** Your `.gitignore` should include:
 ```text
 .env
 __pycache__/
 *.pyc
+venv/
 ```
+
+### Getting a Groq API key
+1. Go to **console.groq.com**, sign in (Google or email, no card needed)
+2. Find "API Keys," create one, copy it
+
+### Getting a Gemini API key
+1. Go to **Google AI Studio** (aistudio.google.com)
+2. Sign in, create an API key, copy it
+
+### Getting the database URL
+Ask a teammate for the shared `DATABASE_URL`, don't create a separate database unless specifically asked to.
 
 ---
 
-# 🚀 Running the Backend
+## 🚀 Running the Backend
 
-## 1. Clone the repository
-
+### 1. Clone the repository
 ```bash
 git clone <repository-url>
 cd Saheli-AI/backend
 ```
 
-## 2. Create a virtual environment
-
-Windows:
-
+### 2. Create a virtual environment
+A virtual environment keeps this project's tools separate from everything else on your computer. Only needs to be done once.
 ```bash
 python -m venv venv
 ```
 
-Activate it:
-
+### 3. Activate it
+Do this every time you start working:
 ```bash
 venv\Scripts\activate
 ```
+You'll see `(venv)` appear at the start of your terminal line when it's active.
 
-## 3. Install dependencies
-
+### 4. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-## 4. Configure environment variables
+### 5. Set up your `.env` file
+See the Environment Variables section above.
 
-Create:
-
-```text
-.env
-```
-
-and add:
-
-```env
-GROQ_API_KEY=your_groq_api_key
-```
-
-## 5. Run the FastAPI server
-
+### 6. Run the server
 ```bash
-uvicorn main:app --reload
+python -m uvicorn app.main:app --reload
 ```
+You should see "Uvicorn running on http://127.0.0.1:8000"
 
-The backend will then be available locally.
+### 7. Test it
+Open your browser to **http://127.0.0.1:8000/docs**. This page lets you test every feature directly, no frontend needed.
+
+To stop the server: click into the terminal and press `Ctrl + C`.
 
 ---
 
-# 🔀 Git Workflow
+## 📡 What Each Endpoint Does
 
-Development is being done using separate branches so that changes can be tested before being merged into `main`.
+| Endpoint | What it does |
+|---|---|
+| `/chat` | Ask Saheli — send a question and a `session_id`, get a grounded, personalized answer. Remembers the full conversation for that session. |
+| `/seller/create` | Save a seller's shop info (name, category, bio) so future chats and reviews are personalized. |
+| `/dukan-ki-baat` | Upload a product photo + title + description + bio, get a structured review back, saved to the database. |
 
-Example:
+---
+
+## 🔀 Git Workflow
+
+We work on separate branches so changes can be tested before merging into `main`.
 
 ```bash
-git checkout -b saheli-backend-changes
+git checkout -b your-branch-name
 ```
 
 After making changes:
-
 ```bash
 git status
 git add .
-git commit -m "Improve Saheli system prompt"
-git push origin saheli-backend-changes
+git commit -m "Describe what you changed"
+git push origin your-branch-name
 ```
 
-If the branch does not yet exist on GitHub:
-
+If the branch doesn't exist on GitHub yet:
 ```bash
-git push -u origin saheli-backend-changes
+git push -u origin your-branch-name
 ```
 
-### Merging an existing remote repository
-
-Because the local repository and the GitHub repository were initially created separately, their histories were unrelated.
-
-The remote `main` branch was therefore pulled using:
-
+**Note on our repo history:** the local and GitHub repositories were initially created separately, so their histories didn't match. This was resolved with:
 ```bash
 git pull origin main --allow-unrelated-histories
 ```
-
-This resulted in a `.gitignore` conflict, which was resolved manually before committing the merge.
-
----
-
-# 🧪 Testing
-
-Saheli has been tested using real seller-style questions such as:
-
-```text
-Hi, I need help pricing my blanket crochet.
-```
-
-and concerns such as:
-
-```text
-I'm worried my business will fail.
-```
-
-Testing has helped identify an important issue with the initial prompt:
-
-> Saheli was sometimes giving sellers a list of things they could do instead of actually helping them complete the task.
-
-The system prompt is therefore being refined to make responses more personalized and action-oriented.
+This caused a `.gitignore` conflict, which was fixed manually before committing. If you ever hit this same error on a fresh setup, this is why, and this is the fix.
 
 ---
 
-# 📌 Current Development Status
+## 🧪 Testing Notes
 
-### Completed / In Progress
+Saheli has been tested with real seller-style messages, including practical questions ("Hi, I need help pricing my blanket crochet") and emotional ones ("I'm worried my business will fail"), and with Dukan Ki Baat reviews using real and deliberately mismatched photos (to confirm she handles a wrong photo gracefully instead of faking a review).
 
-* [x] FastAPI backend setup
-* [x] Python virtual environment
-* [x] Groq integration
-* [x] LLM response generation
-* [x] SQLite database setup
-* [x] SQLAlchemy configuration
-* [x] Conversation model
-* [x] Seller listing model
-* [x] ChromaDB integration setup
-* [x] Initial Saheli system prompt
-* [x] Initial testing with seller questions
-* [x] Git/GitHub repository setup
-* [x] Backend development branch
-* [x] Remote `main` synchronization
-* [x] Resolved `.gitignore` merge conflict
-* [ ] Improve Saheli response quality
-* [ ] Complete RAG pipeline
-* [ ] Connect knowledge base to responses
-* [ ] Improve seller context handling
-* [ ] Complete Dukan Ki Baat functionality
-* [ ] Frontend-backend integration
-* [ ] End-to-end testing
+Testing surfaced a few real issues along the way, since fixed:
+- Saheli was initially just explaining formulas instead of calculating actual answers, fixed by explicitly instructing her to do the math using the seller's real numbers.
+- Responses were sometimes too "cheerleader"-ish (excessive exclamation marks, "my dear"), fixed with explicit tone calibration instructions.
+- Longer responses were occasionally cut off mid-sentence, fixed by adjusting the AI's output length settings.
+- A model's internal "thinking" text was leaking into responses, fixed by hiding reasoning output at the API level.
 
 ---
 
-# 🎯 Future Goals
+## 📌 Current Development Status
 
-The next stage of Saheli development is focused on making the assistant genuinely useful rather than simply technically functional.
+**Done:**
+- [x] FastAPI backend, running and connected to Postgres (Neon)
+- [x] Python virtual environment and `requirements.txt`
+- [x] Groq integration (text model + vision model)
+- [x] Conversation, Seller, and Listing database models
+- [x] ChromaDB integration, knowledge base loaded and confirmed working
+- [x] Ask Saheli — grounded, personalized, remembers conversation history
+- [x] Seller profile creation and automatic personalization
+- [x] Dukan Ki Baat — full structured reviews, saved to the database, handles mismatched photos
+- [x] Saheli's system prompt, refined through real testing
 
-Key goals include:
-
-1. **Better personalization**
-
-   * Remember relevant seller and business context.
-   * Avoid generic responses.
-
-2. **Task completion**
-
-   * Calculate prices using real seller information.
-   * Help interpret costs and numbers.
-   * Provide usable outputs instead of only explaining processes.
-
-3. **Grounded responses**
-
-   * Connect the knowledge base to the assistant.
-   * Retrieve relevant information before answering.
-
-4. **Better Dukan Ki Baat reviews**
-
-   * Analyze actual shop/listing information.
-   * Provide specific, actionable feedback.
-
-5. **End-to-end integration**
-
-   * Connect the frontend, backend, database, RAG system, and AI model into one working application.
+**Still in progress:**
+- [ ] Validating that every review always strictly follows the required structure (not just trusting the prompt)
+- [ ] Friendlier handling when the AI service itself fails or times out
+- [ ] Checking uploaded files are genuinely valid images before processing
+- [ ] Thorough testing in Urdu and Roman Urdu
+- [ ] Saving the actual photo file permanently (currently only the review text is saved, not the image itself)
+- [ ] Frontend–backend integration
+- [ ] End-to-end testing
 
 ---
 
-# 👩‍💻 Project Goal
+## 🎯 Future Goals
+
+1. **Deeper personalization** — remember more seller context over time, connect past goals to new reviews
+2. **Stronger grounding** — keep expanding and refining the knowledge base
+3. **More reliable Dukan Ki Baat** — structure validation, better error handling
+4. **Full integration** — connect frontend, backend, database, and AI into one smooth experience
+
+---
+
+## 👩‍💻 Project Goal
 
 Saheli's goal is not to tell women how to run a business in theory.
 
-It is to make practical business support more accessible to women who are already doing the work.
+It's to make practical business support genuinely accessible to women who are already doing the work.
 
 **Listen to the seller. Understand the problem. Help with the work.**
