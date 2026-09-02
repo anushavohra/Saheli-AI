@@ -1,11 +1,15 @@
 from fastapi import FastAPI
+from fastapi import UploadFile, File, Form
 from groq import Groq
 import os
 from dotenv import load_dotenv
 from app.database import engine, Base, SessionLocal
 from app.models import conversation, seller_listing
+from app.models.seller_listing import Seller
 from app.models.conversation import Conversation
 import chromadb
+import re
+import base64
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
 collection = chroma_client.get_or_create_collection(name="saheli_knowledge")
 Base.metadata.create_all(bind=engine)
@@ -14,7 +18,6 @@ load_dotenv()
 app = FastAPI()
 
 groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
-
 SAHELI_SYSTEM_PROMPT = """
 You are Saheli, a warm, grounded AI mentor for Pakistani women running small, home-based businesses such as jewelry, crochet, embroidery, baked goods, candles, clothing, and other handmade or home-based work.
 
@@ -145,16 +148,27 @@ Do not pretend that knowledge-base information exists when it does not.
 
 ## SHOP / PRODUCT REVIEW — DUKAN KI BAAT
 
-When reviewing a shop, product, or listing, use this structure:
+When reviewing a shop, product, or listing, use this exact structure:
 
 1. ONE genuine, specific strength.
    Reference something actually visible or stated in the seller's shop, product, photo, or description.
 
 2. ONE OR TWO specific improvements.
-   Each improvement must explain what to change and why it could help.
-
+   Each improvement must explain what to change and why it could help, AND include the actual finished rewrite the seller can copy and use directly, not just a description of what kind of change to make. For example, if you suggest a better title, write the new title itself inside that improvement, don't describe it separately.
+   When suggesting an improvement to text content (title, description, or bio), offer 2 short ready-to-use options rather than one single fixed rewrite, so the seller can pick whichever feels most like her voice. Keep each option brief. Frame these as suggestions she can adapt, not the one correct answer, for example "here are a couple directions you could take this" rather than presenting it as the definitive fix.
 3. ONE small weekly goal.
    The goal must directly relate to the improvement you suggested.
+
+Do not add a separate section for rewritten text, fold the ready-to-use rewrite into the improvement itself.
+
+## PERSONALIZATION IN DUKAN KI BAAT
+
+If the seller's business context (shop name, category, bio, past conversation history) is available, use it directly in the review:
+
+* Reference their shop or product category by name where relevant, rather than speaking generically.
+* If their category has specific pricing, positioning, or presentation norms (from the knowledge base), apply those specifically, not generic handmade-seller advice.
+* If you know this seller from earlier conversations (pricing discussed, goals set previously), connect the review to that context where genuinely relevant, for example, noting if a past goal seems reflected in this listing.
+* Do not fabricate seller details that were not actually provided.
 
 Do not praise something that you cannot actually see or verify.
 
@@ -265,6 +279,12 @@ import time
 def chat(message: str, session_id: str):
     db = SessionLocal()
 
+    seller = db.query(Seller).filter(Seller.session_id == session_id).first()
+    if seller:
+        seller_context = f"Seller's shop: {seller.shop_name}, Category: {seller.category}, Bio: {seller.bio}"
+    else:
+        seller_context = ""
+
     user_message = Conversation(session_id=session_id, sender="user", message=message)
     db.add(user_message)
     db.commit()
@@ -279,7 +299,10 @@ def chat(message: str, session_id: str):
     retrieved_knowledge = "\n".join(query_result["documents"][0])
     print("ChromaDB query took:", time.time() - t2)
 
-    full_prompt = f"""Relevant knowledge base guidance:
+    full_prompt = f"""Seller's business context:
+{seller_context}
+
+Relevant knowledge base guidance:
 {retrieved_knowledge}
 
 Conversation so far:
@@ -302,3 +325,74 @@ Conversation so far:
 
     db.close()
     return {"reply": response.choices[0].message.content}
+
+
+
+@app.post("/seller/create")
+def create_seller(session_id: str, shop_name: str, category: str, bio: str = None):
+    db = SessionLocal()
+
+    new_seller = Seller(
+        session_id=session_id,
+        shop_name=shop_name,
+        category=category,
+        bio=bio
+    )
+    db.add(new_seller)
+    db.commit()
+    db.close()
+
+    return {"message": "Seller profile created successfully"}
+
+def clean_response(text):
+    return re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
+
+
+@app.post("/dukan-ki-baat")
+async def review_shop(
+    photo: UploadFile = File(...),
+    title: str = Form(...),
+    description: str = Form(...),
+    shop_bio: str = Form(...),
+    session_id: str = Form(...)
+):
+    photo_bytes = await photo.read()
+    base64_image = base64.b64encode(photo_bytes).decode('utf-8')
+    db = SessionLocal()
+    seller = db.query(Seller).filter(Seller.session_id == session_id).first()
+    if seller:
+        seller_context = f"Seller's shop: {seller.shop_name}, Category: {seller.category}, Bio: {seller.bio}"
+    else:
+        seller_context = ""
+    response = groq_client.chat.completions.create(
+        model="qwen/qwen3.6-27b",
+        messages=[
+            {"role": "system", "content": SAHELI_SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": f"""Product title: {title}
+Description: {description}
+Shop bio: {shop_bio}
+Seller context: {seller_context}
+
+Please review this shop following the Dukan Ki Baat structure."""
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": f"data:{photo.content_type};base64,{base64_image}"
+                        }
+                    }
+                ]
+            }
+        ],
+        reasoning_format="hidden",
+        max_completion_tokens=3000
+    )
+
+    return {"review": clean_response(response.choices[0].message.content)}
+
+
