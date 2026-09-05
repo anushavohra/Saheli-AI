@@ -1,44 +1,111 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import Button from './Button';
 
 const Navbar = ({ onOpenChat }) => {
-  const scrollToSection = (e, id) => {
-    e.preventDefault();
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleNavClick = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleCtaClick = () => {
+    setIsMobileMenuOpen(false);
+    if (onOpenChat) {
+      onOpenChat();
+    } else {
+      navigate('/saheli-ai');
     }
   };
 
   return (
-    <header className="navbar-container">
-      <div className="navbar-content">
-        {/* Brand Logo */}
-        <div className="brand-logo">
-          <svg className="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C13.5 6 17.5 7.5 22 8C18 9.5 16.5 13.5 16 18C14.5 14 10.5 12.5 6 12C10 10.5 11.5 6.5 12 2Z" fill="#C04A3E"/>
-            <circle cx="12" cy="12" r="3" fill="#EAA536"/>
-          </svg>
-          <span className="brand-name">SAHELI AI</span>
-        </div>
+    <header className="navbar-container" role="banner">
+      {/* Top Truck Art Chamakpatti Pattern Border */}
+      <div className="navbar-truck-border" aria-hidden="true"></div>
 
-        {/* Center Nav Links */}
-        <nav className="nav-links">
-          <a href="#how-it-helps" onClick={(e) => scrollToSection(e, 'how-it-helps')} className="nav-link">
-            HOW IT HELPS
-          </a>
-          <a href="#about" onClick={(e) => scrollToSection(e, 'about')} className="nav-link">
-            ABOUT
-          </a>
+      <div className="navbar-content">
+        {/* Brand Wordmark matching Image 1 */}
+        <NavLink to="/" className="brand-logo" onClick={handleNavClick}>
+          <div className="logo-flower-badge" aria-hidden="true">
+            <span>🌸</span>
+          </div>
+          <div className="brand-text-block">
+            <span className="brand-name font-yatra">Saheli-AI</span>
+            <span className="brand-subtext">Aapki Business Saheli</span>
+          </div>
+        </NavLink>
+
+        {/* Navigation Links */}
+        <nav className={`nav-links ${isMobileMenuOpen ? 'mobile-open' : ''}`} aria-label="Main Navigation">
+          <NavLink 
+            to="/" 
+            end 
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            onClick={handleNavClick}
+          >
+            Home
+          </NavLink>
+          
+          <NavLink 
+            to="/dukaan-ki-baat" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            onClick={handleNavClick}
+          >
+            Dukaan Ki Baat
+          </NavLink>
+
+          <NavLink 
+            to="/seller-registration" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            onClick={handleNavClick}
+          >
+            Seller Registration
+          </NavLink>
+
+          <NavLink 
+            to="/saheli-ai" 
+            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            onClick={handleNavClick}
+          >
+            Saheli Se Poocho
+          </NavLink>
+
+          {/* Mobile CTA */}
+          <div className="mobile-cta-row">
+            <Button 
+              to="/saheli-ai"
+              onClick={handleNavClick}
+              ariaLabel="Saheli Se Poocho"
+            >
+              Saheli Se Poocho
+            </Button>
+          </div>
         </nav>
 
-        {/* Right Action Button */}
-        <button 
-          className="nav-cta-btn" 
-          onClick={() => onOpenChat()}
-          aria-label="Open Ask Saheli Chat"
-        >
-          ASK SAHELI
-        </button>
+        {/* Desktop CTA & Mobile Hamburger */}
+        <div className="nav-right-actions">
+          <Button 
+            to="/saheli-ai"
+            className="desktop-cta"
+            onClick={handleNavClick}
+            ariaLabel="Saheli Se Poocho"
+          >
+            Saheli Se Poocho
+          </Button>
+
+          <button 
+            type="button"
+            className="hamburger-btn"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+            aria-expanded={isMobileMenuOpen}
+          >
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open-1' : ''}`}></span>
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open-2' : ''}`}></span>
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open-3' : ''}`}></span>
+          </button>
+        </div>
       </div>
     </header>
   );

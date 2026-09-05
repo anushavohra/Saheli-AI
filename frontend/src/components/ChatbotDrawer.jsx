@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { sendChatMessage, getSessionId } from '../services/api';
 
-const demoResponses = [
-  "Shukriya poochne ke liye! Main aapke business ke liye perfect Instagram caption ya customer reply likhne mein madad kar sakti hoon. 🌸",
-  "Bohot achha sawaal hai! Pricing set karte waqt raw material cost, aap ka waqt, aur market rate teenon ko shamil karein.",
-  "Zaroor! WhatsApp par customer ko reply bhejte waqt Hamesha 'Assalam-o-Alaikum' se shuru karein aur polite tone rakhein. 🌸"
+const quickChips = [
+  "Instagram caption likh do",
+  "Pricing suggest karo",
+  "Customer reply draft karo",
+  "Eid sale ka idea do"
 ];
 
 const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
@@ -18,30 +20,21 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Sync initial prompt when opened from a prompt card
   useEffect(() => {
     if (initialPrompt) {
       setInputText(initialPrompt);
     }
   }, [initialPrompt]);
 
-  // Auto-scroll to bottom of chat
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isTyping]);
 
-  /* 
-   * FRONTEND-ONLY SEND MESSAGE HANDLER
-   * Note: This function manages local frontend chat state for demo interaction.
-   * When integrating the real AI backend, replace the setTimeout demo logic below 
-   * with your actual backend API call (e.g. fetch('/api/chat', ...)).
-   */
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e, textToSend) => {
     if (e) e.preventDefault();
-    const trimmed = inputText.trim();
+    const trimmed = (textToSend || inputText).trim();
     if (!trimmed || isTyping) return;
 
-    // 1. Add User Message
     const userMsg = {
       id: Date.now(),
       sender: 'user',
@@ -51,48 +44,48 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
     setInputText('');
     setIsTyping(true);
 
-    // 2. Simulate AI Response Delay (Frontend Demo Only)
-    setTimeout(() => {
-      const randomReply = demoResponses[Math.floor(Math.random() * demoResponses.length)];
+    try {
+      const sessionId = getSessionId();
+      const reply = await sendChatMessage(trimmed, sessionId);
       const saheliMsg = {
         id: Date.now() + 1,
         sender: 'saheli',
-        text: randomReply
+        text: reply
       };
       setMessages((prev) => [...prev, saheliMsg]);
+    } catch (err) {
+      console.error(err);
+    } finally {
       setIsTyping(false);
-    }, 700);
+    }
   };
 
   const handleChipClick = (chipText) => {
     setInputText(chipText);
+    handleSendMessage(null, chipText);
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="chatbot-overlay" onClick={onClose}>
+    <div className="chatbot-overlay" onClick={onClose} role="presentation">
       <div 
         className="chatbot-drawer" 
         onClick={(e) => e.stopPropagation()}
         role="dialog"
-        aria-label="Saheli AI Chatbot"
+        aria-label="Saheli AI Quick Chat"
       >
         {/* Drawer Header */}
         <div className="chatbot-header">
           <div className="header-brand">
-            <div className="header-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C13.5 6 17.5 7.5 22 8C18 9.5 16.5 13.5 16 18C14.5 14 10.5 12.5 6 12C10 10.5 11.5 6.5 12 2Z" fill="#C04A3E"/>
-                <circle cx="12" cy="12" r="3" fill="#EAA536"/>
-              </svg>
-            </div>
+            <span className="header-flower-icon" aria-hidden="true">🌸</span>
             <div>
-              <h3 className="header-title">SAHELI AI</h3>
-              <p className="header-subtitle">Your business saheli</p>
+              <h3 className="header-title font-yatra">SAHELI AI</h3>
+              <p className="header-subtitle">Har business ko chahiye aik saheli</p>
             </div>
           </div>
           <button 
+            type="button"
             className="chatbot-close-btn" 
             onClick={onClose}
             aria-label="Close Chat"
@@ -103,19 +96,20 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
 
         {/* Quick Suggestion Chips */}
         <div className="chatbot-chips">
-          <button onClick={() => handleChipClick("Instagram caption likh do")} className="chip-btn">
-            Instagram caption
-          </button>
-          <button onClick={() => handleChipClick("Pricing suggest karo")} className="chip-btn">
-            Pricing idea
-          </button>
-          <button onClick={() => handleChipClick("Customer reply draft karo")} className="chip-btn">
-            Customer reply
-          </button>
+          {quickChips.map((chip, i) => (
+            <button 
+              key={i} 
+              type="button"
+              onClick={() => handleChipClick(chip)} 
+              className="chip-btn"
+            >
+              {chip}
+            </button>
+          ))}
         </div>
 
         {/* Chat Message History */}
-        <div className="chatbot-body">
+        <div className="chatbot-body" role="log">
           {messages.map((msg) => (
             <div 
               key={msg.id} 
@@ -135,7 +129,6 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
             </div>
           ))}
 
-          {/* Typing Indicator */}
           {isTyping && (
             <div className="chat-bubble-wrapper bubble-saheli">
               <div className="avatar-saheli" aria-hidden="true">🌸</div>
@@ -150,7 +143,7 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
         </div>
 
         {/* Chat Input Bar */}
-        <form className="chatbot-footer" onSubmit={handleSendMessage}>
+        <form className="chatbot-footer" onSubmit={(e) => handleSendMessage(e)}>
           <input
             type="text"
             className="chatbot-input"
@@ -162,7 +155,7 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
           <button 
             type="submit" 
             className="chatbot-send-btn" 
-            disabled={!inputText.trim()}
+            disabled={!inputText.trim() || isTyping}
             aria-label="Send Message"
           >
             &rarr;

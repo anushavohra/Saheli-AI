@@ -3,7 +3,6 @@ import Navbar from './Navbar';
 import HeroSection from './HeroSection';
 import PromptSection from './PromptSection';
 import ChatbotDrawer from './ChatbotDrawer';
-import Footer from './Footer';
 import './SaheliLanding.css';
 
 const SaheliLanding = () => {
@@ -32,9 +31,6 @@ const SaheliLanding = () => {
         {/* Prompt Examples Section */}
         <PromptSection onSelectPrompt={(promptText) => handleOpenChat(promptText)} />
       </main>
-
-      {/* Footer */}
-      <Footer />
 
       {/* Frontend-Only Chatbot Drawer */}
       <ChatbotDrawer

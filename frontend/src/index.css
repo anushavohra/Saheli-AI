@@ -1,8 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --cream-bg: #F6EEDF;
-  --cream-paper: #FBF6ED;
+  /* Verified Brand Tokens */
+  --maroon-bg: #530505;
+  --maroon-dark: #3a0303;
+  --maroon-surface: #680b0b;
+  --orange-brand: #DE812B;
+  --orange-warm: #F4A064;
+  --cream-card: #FCE2A3;
+  --cream-bg: #F5EAD4;
+  --cream-paper: #FFFDF9;
+  --terracotta-card: #F4A064;
+  --red-card: #F93240;
+  --hero-sub-color: #F9F4E9;
+  --plum-shadow: rgba(106, 61, 90, 0.7);
+
+  /* Legacy & Text Tokens */
   --coral-red: #C04A3E;
   --coral-dark: #9E372D;
   --teal: #267A75;
@@ -10,10 +23,14 @@
   --marigold: #EAA536;
   --text-dark: #2D2322;
   --text-muted: #6B5D5C;
-  --card-bg: #F2E9DB;
-  --card-border: #E2D7C5;
+  --text-on-dark: #FBF5E8;
+  --card-bg: #F5EAD4;
+  --card-border: #D8C7B0;
   --note-yellow: #FAF0A8;
   --note-tan: #EBE0CD;
+
+  /* Typography */
+  --font-yatra: 'Yatra One', cursive, system-ui;
   --font-serif: 'DM Serif Display', 'Cormorant Garamond', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-handwritten: 'Caveat', cursive;
@@ -32,6 +49,11 @@ html, body {
   overflow-x: hidden;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-yatra {
+  font-family: var(--font-yatra);
+  letter-spacing: 0.02em;
 }
 
 button {
