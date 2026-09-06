@@ -1,4 +1,6 @@
-
+chroma_data/
+.env
+__pycache__/
 .env
 __pycache__/
 # Logs
