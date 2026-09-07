@@ -14,8 +14,8 @@ for filename in os.listdir(kb_folder):
             content = f.read()
 
         collection.add(
-            documents=[content],
-            ids=[filename]
-        )
+    documents=[content],
+    ids=[filename]
+)
 
 print("Knowledge base loaded successfully.")
