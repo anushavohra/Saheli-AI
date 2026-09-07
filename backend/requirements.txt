@@ -1,5 +1,7 @@
 fastapi
 uvicorn
 python-dotenv
-google-genai
+sqlalchemy
 chromadb
+openai
+python-multipart
