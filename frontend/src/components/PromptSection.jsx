@@ -81,9 +81,7 @@ const PromptSection = ({ onSelectPrompt }) => {
       <div className="prompt-container">
         {/* Section Header */}
         <h2 className="prompt-header">
-          <span className="flower-icon left-flower">🌷</span>
           <span>Saheli se kya pooch sakti hain?</span>
-          <span className="flower-icon right-flower">🌷</span>
         </h2>
 
         {/* 6 Interactive Prompt Cards */}

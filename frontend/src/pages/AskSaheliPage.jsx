@@ -4,12 +4,12 @@ import { sendChatMessage, getSessionId, getSavedSellerProfile } from '../service
 import cardSaheliPoocho from '../assets/card-saheli-poocho.png';
 
 const knowledgePrompts = [
-  { label: '💰 Pricing Formula', prompt: 'Mere handmade product ki pricing kaise calculate karun? Formula batao.' },
-  { label: '📸 Product Photography', prompt: 'Mobile se natural light mein achhi product photography kaise karein?' },
-  { label: '💬 WhatsApp Customer Reply', prompt: 'WhatsApp par polite customer reply draft karo pricing aur delivery charges batane ke liye.' },
-  { label: '📱 Instagram Reach & Reels', prompt: 'Instagram par handmade craft ke orders aur reach barhane ke tips do.' },
-  { label: '📝 Catchy Listing Copy', prompt: 'Handmade product ke liye catchy product description aur hashtags likh do.' },
-  { label: '📦 Safe Craft Packaging', prompt: 'Delivery mein handmade items tootne se bachane ke packaging tips do.' }
+  { label: 'Pricing Formula', prompt: 'Mere handmade product ki pricing kaise calculate karun? Formula batao.' },
+  { label: 'Product Photography', prompt: 'Mobile se natural light mein achhi product photography kaise karein?' },
+  { label: 'WhatsApp Customer Reply', prompt: 'WhatsApp par polite customer reply draft karo pricing aur delivery charges batane ke liye.' },
+  { label: 'Instagram Reach & Reels', prompt: 'Instagram par handmade craft ke orders aur reach barhane ke tips do.' },
+  { label: 'Catchy Listing Copy', prompt: 'Handmade product ke liye catchy product description aur hashtags likh do.' },
+  { label: 'Safe Craft Packaging', prompt: 'Delivery mein handmade items tootne se bachane ke packaging tips do.' }
 ];
 
 const AskSaheliPage = () => {
@@ -20,7 +20,7 @@ const AskSaheliPage = () => {
     {
       id: 1,
       sender: 'saheli',
-      text: `Assalam-o-Alaikum! 🌸\nMain **Saheli** hoon — aap ki business mashwara dost.${sellerProfile?.name ? ` Mujhe pata hai aap ka brand **"${sellerProfile.name}"** hai!` : ''}\n\nPricing ho, photography, customer reply, ya Instagram selling — be-jhijhak poochhein. Main sun rahi hoon!`
+      text: `Assalam-o-Alaikum!\nMain **Saheli** hoon — aap ki business mashwara dost.${sellerProfile?.name ? ` Mujhe pata hai aap ka brand **"${sellerProfile.name}"** hai!` : ''}\n\nPricing ho, photography, customer reply, ya Instagram selling — be-jhijhak poochhein. Main sun rahi hoon!`
     }
   ]);
 
@@ -28,6 +28,7 @@ const AskSaheliPage = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
   const messagesEndRef = useRef(null);
+  const isInitialMount = useRef(true);
 
   // Auto-fill prompt if passed via navigation state
   useEffect(() => {
@@ -36,9 +37,15 @@ const AskSaheliPage = () => {
     }
   }, [location.state]);
 
-  // Scroll to bottom
+  // Scroll to bottom only after user interactions or incoming messages (never on page load)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    if (messages.length > 1 || isTyping) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   }, [messages, isTyping]);
 
   const handleSend = async (textToSend) => {
@@ -84,7 +91,7 @@ const AskSaheliPage = () => {
 
   return (
     <div className="saheli-chat-page" aria-label="Ask Saheli Conversational Mentor">
-      {/* 1. Header Banner matching Image 1 */}
+      {/* 1. Header Banner matching brand identity */}
       <header className="chat-intro-banner">
         <div className="chat-intro-container">
           <div className="chat-intro-left">
@@ -97,7 +104,7 @@ const AskSaheliPage = () => {
             </p>
             {sellerProfile?.name && (
               <div className="seller-active-badge">
-                <span>🌸 Personalized for <strong>{sellerProfile.name}</strong> ({sellerProfile.category || 'Handmade'})</span>
+                <span>Personalized for <strong>{sellerProfile.name}</strong> ({sellerProfile.category || 'Handmade'})</span>
               </div>
             )}
           </div>
@@ -142,12 +149,6 @@ const AskSaheliPage = () => {
                 key={msg.id}
                 className={`editorial-message-row ${msg.sender === 'user' ? 'row-user' : 'row-saheli'}`}
               >
-                {msg.sender === 'saheli' && (
-                  <div className="saheli-message-avatar" aria-hidden="true">
-                    <span>🌸</span>
-                  </div>
-                )}
-
                 <div className="editorial-message-card">
                   <div className="message-sender-meta">
                     <span className="sender-tag">
@@ -181,7 +182,7 @@ const AskSaheliPage = () => {
                         className="msg-action-btn"
                         title="Copy message"
                       >
-                        {copiedId === msg.id ? '✓ Copied!' : '📋 Copy Text'}
+                        {copiedId === msg.id ? 'Copied!' : 'Copy Text'}
                       </button>
                       <button 
                         type="button" 
@@ -189,7 +190,7 @@ const AskSaheliPage = () => {
                         className="msg-action-btn whatsapp-action"
                         title="Share on WhatsApp"
                       >
-                        📱 WhatsApp
+                        WhatsApp
                       </button>
                     </div>
                   )}
@@ -199,9 +200,6 @@ const AskSaheliPage = () => {
 
             {isTyping && (
               <div className="editorial-message-row row-saheli">
-                <div className="saheli-message-avatar" aria-hidden="true">
-                  <span>🌸</span>
-                </div>
                 <div className="editorial-message-card typing-card">
                   <span className="typing-label">Saheli mashwara soch rahi hai...</span>
                   <div className="hand-drawn-dots" aria-hidden="true">
@@ -242,7 +240,7 @@ const AskSaheliPage = () => {
           </form>
 
           <footer className="chat-support-note">
-            <span>🌿 Saheli Roman Urdu, Urdu aur English teeno zabanon mein behtareen mashwara deti hai.</span>
+            <span>Saheli Roman Urdu, Urdu aur English teeno zabanon mein behtareen mashwara deti hai.</span>
           </footer>
         </div>
       </main>

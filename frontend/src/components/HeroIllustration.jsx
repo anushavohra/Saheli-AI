@@ -12,7 +12,7 @@ const showcaseItems = [
     urduTitle: 'سلائی اور کڑھائی',
     subtitle: 'Tailoring & Boutique Crafts',
     image: craftSilai,
-    stickyNote: 'Apna kaam, apni pehchaan, apni Saheli. ♥',
+    stickyNote: 'Apna kaam, apni pehchaan, apni Saheli.',
     tag: 'Fashion & Textiles'
   },
   {
@@ -21,7 +21,7 @@ const showcaseItems = [
     urduTitle: 'مٹی کا ہنر',
     subtitle: 'Handmade Pottery & Terracotta',
     image: craftClay,
-    stickyNote: 'Safar apnay hunnar ka. ♥',
+    stickyNote: 'Safar apnay hunnar ka.',
     tag: 'Pottery & Ceramics'
   },
   {
@@ -30,7 +30,7 @@ const showcaseItems = [
     urduTitle: 'دستکاری اور بنائی',
     subtitle: 'Weaving & Traditional Looms',
     image: craftLoom,
-    stickyNote: 'Safar apnay hunnar ka. ♥',
+    stickyNote: 'Safar apnay hunnar ka.',
     tag: 'Handloom & Weaving'
   },
   {
@@ -39,7 +39,7 @@ const showcaseItems = [
     urduTitle: 'ہوم بیکنگ کا ذائقہ',
     subtitle: 'Custom Cakes & Home Bakeries',
     image: craftBaking,
-    stickyNote: 'Safar apnay hunnar ka. ♥',
+    stickyNote: 'Safar apnay hunnar ka.',
     tag: 'Home Bakery'
   },
   {
@@ -48,7 +48,7 @@ const showcaseItems = [
     urduTitle: 'خوشبو اور روشنی',
     subtitle: 'Scented Candles & Organic Oils',
     image: craftFragrance,
-    stickyNote: 'Safar apnay hunnar ka. ♥',
+    stickyNote: 'Safar apnay hunnar ka.',
     tag: 'Candles & Aromatherapy'
   }
 ];
@@ -79,7 +79,6 @@ const HeroIllustration = () => {
     >
       {/* Decorative truck-art corner floral flourish */}
       <div className="showcase-floral-badge" aria-hidden="true">
-        <span>🌸</span>
         <span className="badge-text">{currentCraft.tag}</span>
       </div>
 
