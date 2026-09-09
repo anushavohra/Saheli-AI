@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+:root {
+  /* Verified Brand Tokens */
+  --maroon-bg: #530505;
+  --maroon-dark: #3a0303;
+  --maroon-surface: #680b0b;
+  --orange-brand: #DE812B;
+  --orange-warm: #F4A064;
+  --cream-card: #FCE2A3;
+  --cream-bg: #F5EAD4;
+  --cream-paper: #F5EAD4;
+  --terracotta-card: #F4A064;
+  --red-card: #F93240;
+  --hero-sub-color: #F9F4E9;
+  --plum-shadow: rgba(106, 61, 90, 0.7);
+
+  /* Legacy & Text Tokens */
+  --coral-red: #C04A3E;
+  --coral-dark: #9E372D;
+  --teal: #267A75;
+  --teal-dark: #1B5854;
+  --marigold: #EAA536;
+  --text-dark: #2D2322;
+  --text-muted: #6B5D5C;
+  --text-on-dark: #FBF5E8;
+  --card-bg: #F5EAD4;
+  --card-border: #D8C7B0;
+  --note-yellow: #FAF0A8;
+  --note-tan: #EBE0CD;
+
+  /* Typography */
+  --font-yatra: 'Yatra One', cursive, system-ui;
+  --font-serif: 'DM Serif Display', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-handwritten: 'Caveat', cursive;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--cream-bg);
+  color: var(--text-dark);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-yatra {
+  font-family: var(--font-yatra);
+  letter-spacing: 0.02em;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  background-color: var(--cream-bg);
+  color: var(--text-dark);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
