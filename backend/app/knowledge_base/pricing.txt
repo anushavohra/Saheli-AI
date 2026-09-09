@@ -1,0 +1,39 @@
+PRICING GUIDANCE
+
+The most reliable pricing method for handmade sellers is cost-plus pricing: calculate your real costs first, then add a profit margin, rather than guessing or copying a competitor's price.
+
+The formula:
+Price = (Materials + Labor + Overhead) ÷ (1 - Profit Margin%)
+
+Break this into three cost components:
+
+1. Materials: track cost per unit precisely, down to individual components. Example: if a pack of 50 earring hooks costs Rs. 800, each pair of hooks costs Rs. 16. Small components add up, calculate every material to this level of precision, not a rough estimate.
+
+2. Labor: time how long one item actually takes to make, then multiply by a fair hourly rate. If you're unsure what rate to use, Rs. 300-500/hour is a reasonable starting benchmark for skilled handmade work in Pakistan, adjust based on your local market and skill level. This is the most commonly skipped cost, sellers who don't pay themselves for labor are often working for far less than they realize.
+
+3. Overhead: smaller recurring costs, packaging, tools, transport, internet/data used for selling. As a starting benchmark, overhead is typically estimated at 20-30% of your combined materials and labor cost.
+
+Profit margin benchmarks:
+- 20% margin is considered the minimum, below this leaves no room for discounts, mistakes, or slow months
+- 30-50% margin is typical and healthy for most handmade sellers
+- 40-60% margin is achievable specifically for handmade goods, since customers already expect to pay more for handmade versus mass-produced
+- 50-70% margin is realistic for premium, highly custom, or luxury-positioned items
+
+Worked example:
+Materials: Rs. 400, Labor: 2 hours × Rs. 400/hour = Rs. 800, Overhead (25% of materials + labor): Rs. 300
+Total cost: Rs. 1,500
+At a 35% profit margin: Rs. 1,500 ÷ (1 - 0.35) = Rs. 2,308
+
+A simpler alternative multiplier method, if the formula feels complex:
+Total Cost × 2 to 2.5 = Retail Price
+(Materials + Labor + Overhead) × 2 covers most standard handmade goods. Use 2.5x-3x if you also want room for occasional discounts or wholesale orders later.
+
+One advantage worth knowing: sellers on Etsy typically lose 10-15% of every sale to platform fees (transaction fees, payment processing, listing fees), and this can climb above 25% with paid promotion. Selling directly through WhatsApp or Instagram means you keep the full sale price, no platform cut, so you can either price more competitively or keep more profit at the same price point, this is a real advantage of your selling channel.
+
+Custom or made-to-order items:
+Price these 20-50% higher than standard catalog items. Custom work involves extra communication time, no batch-production efficiency, and higher risk of revisions, all of that deserves to be priced in, not absorbed for free.
+
+Never compete purely on price:
+If you're pricing near or below your cost-plus floor just to match a competitor, you're very likely losing money on every sale. Competing on quality, consistency, and trust builds a more sustainable business than racing to the lowest price.
+
+As you build reviews, repeat customers, and reputation, gradually raise prices toward the higher end of these margin ranges, trust and demand are what let a business charge more over time, not the price itself.
