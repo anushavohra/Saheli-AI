@@ -1,4 +1,6 @@
-
+chroma_data/
+.env
+__pycache__/
 .env
 venv/
 __pycache__/
@@ -146,3 +148,4 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 >>>>>>> 3555e3e5f178b944a5f272b36204b420484faadd
+app/main_before_routes.py
