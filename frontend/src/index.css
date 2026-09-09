@@ -9,7 +9,7 @@
   --orange-warm: #F4A064;
   --cream-card: #FCE2A3;
   --cream-bg: #F5EAD4;
-  --cream-paper: #FFFDF9;
+  --cream-paper: #F5EAD4;
   --terracotta-card: #F4A064;
   --red-card: #F93240;
   --hero-sub-color: #F9F4E9;
@@ -59,6 +59,12 @@ h1, h2, h3, h4, .font-yatra {
 button {
   font-family: inherit;
   cursor: pointer;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  background-color: var(--cream-bg);
+  color: var(--text-dark);
 }
 
 a {

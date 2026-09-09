@@ -102,10 +102,10 @@ const DukaanKiBaatPage = () => {
               Apni dukaan aur product ko Saheli ki nazar se dekhein — behtari ke seedhay, kaam ke mashwaray ke saath.
             </p>
             <div className="dukaan-intro-highlights">
-              <span className="hl-item">✨ Strength review</span>
-              <span className="hl-item">🌿 Practical improvements</span>
-              <span className="hl-item">✍️ Ready-to-use rewritten caption</span>
-              <span className="hl-item">🎯 Weekly small goal</span>
+              <span className="hl-item">Strength review</span>
+              <span className="hl-item">Practical improvements</span>
+              <span className="hl-item">Ready-to-use rewritten caption</span>
+              <span className="hl-item">Weekly small goal</span>
             </div>
           </div>
 
@@ -132,7 +132,7 @@ const DukaanKiBaatPage = () => {
 
             {errorMessage && (
               <div className="form-error-alert" role="alert">
-                <span>⚠️ {errorMessage}</span>
+                <span>{errorMessage}</span>
               </div>
             )}
 
@@ -165,7 +165,6 @@ const DukaanKiBaatPage = () => {
                       className="file-input-hidden"
                     />
                     <label htmlFor="product-photo-input" className="dropzone-label">
-                      <span className="dropzone-icon" aria-hidden="true">📷</span>
                       <span className="dropzone-main-text">Product ki tasweer yahan upload karein</span>
                       <span className="dropzone-sub-text">PNG, JPG, JPEG (Max 10MB)</span>
                     </label>
@@ -247,7 +246,6 @@ const DukaanKiBaatPage = () => {
           {reviewResult && (
             <section className="dukaan-review-results" id="review-results" aria-label="Saheli Product Review Results">
               <div className="review-results-banner">
-                <span className="review-seal" aria-hidden="true">🌸</span>
                 <div>
                   <h2 className="review-results-title">
                     Saheli Ka Review: {title || 'Aap Ka Product'}
@@ -263,7 +261,6 @@ const DukaanKiBaatPage = () => {
                 {reviewResult.strength && (
                   <article className="review-card card-strength">
                     <div className="review-card-header">
-                      <span className="review-header-icon" aria-hidden="true">🌱</span>
                       <h3 className="review-section-heading">Jo Acha Hai</h3>
                     </div>
                     <div className="review-card-body">
@@ -276,7 +273,6 @@ const DukaanKiBaatPage = () => {
                 {reviewResult.improvements && (
                   <article className="review-card card-improvements">
                     <div className="review-card-header">
-                      <span className="review-header-icon" aria-hidden="true">💡</span>
                       <h3 className="review-section-heading">Thori Si Behtari</h3>
                     </div>
                     <div className="review-card-body">
@@ -297,7 +293,6 @@ const DukaanKiBaatPage = () => {
                 {reviewResult.rewritten_text && (
                   <article className="review-card card-rewritten">
                     <div className="review-card-header">
-                      <span className="review-header-icon" aria-hidden="true">✍️</span>
                       <h3 className="review-section-heading">Yeh Text Use Kar Sakti Hain</h3>
                     </div>
                     <div className="review-card-body">
@@ -309,14 +304,14 @@ const DukaanKiBaatPage = () => {
                           onClick={() => handleCopyText(reviewResult.rewritten_text)}
                           className="action-btn copy-btn"
                         >
-                          {copied ? '✓ Copied!' : '📋 Copy Text'}
+                          {copied ? 'Copied!' : 'Copy Text'}
                         </button>
                         <button 
                           type="button" 
                           onClick={() => handleWhatsAppShare(reviewResult.rewritten_text)}
                           className="action-btn whatsapp-share-btn"
                         >
-                          📱 WhatsApp Par Bhejo
+                          WhatsApp Par Bhejo
                         </button>
                       </div>
                     </div>
@@ -327,7 +322,6 @@ const DukaanKiBaatPage = () => {
                 {reviewResult.weekly_goal && (
                   <article className="review-card card-goal">
                     <div className="review-card-header">
-                      <span className="review-header-icon" aria-hidden="true">🎯</span>
                       <h3 className="review-section-heading">Is Haftay Ka Chhota Goal</h3>
                     </div>
                     <div className="review-card-body">

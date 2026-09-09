@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createSellerProfile, getSavedSellerProfile } from '../services/api';
+import { createSellerProfile, getSavedSellerProfile, getSessionId } from '../services/api';
 import cardRegistration from '../assets/card-registration.png';
 
 const registrationSteps = [
@@ -73,6 +73,7 @@ const SellerRegistrationPage = () => {
   const [sellerName, setSellerName] = useState('');
   const [category, setCategory] = useState('Jewelry');
   const [bio, setBio] = useState('');
+  const [sessionId, setSessionId] = useState(() => getSessionId());
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
@@ -82,6 +83,7 @@ const SellerRegistrationPage = () => {
       if (saved.name) setSellerName(saved.name);
       if (saved.category) setCategory(saved.category);
       if (saved.bio) setBio(saved.bio);
+      if (saved.session_id) setSessionId(saved.session_id);
     }
   }, []);
 
@@ -92,11 +94,16 @@ const SellerRegistrationPage = () => {
     setIsSaving(true);
     setSaveSuccess(false);
 
+    const activeSessionId = sessionId.trim() || getSessionId();
+    localStorage.setItem('saheli_session_id', activeSessionId);
+
     try {
       await createSellerProfile({
         name: sellerName.trim(),
+        shop_name: sellerName.trim(),
         category,
-        bio: bio.trim()
+        bio: bio.trim(),
+        session_id: activeSessionId
       });
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 4000);
@@ -109,7 +116,7 @@ const SellerRegistrationPage = () => {
 
   return (
     <div className="registration-feature-page" aria-label="Seller Registration Guide">
-      {/* 1. Header Banner matching Image 1 */}
+      {/* 1. Header Banner matching brand identity */}
       <header className="reg-intro-banner">
         <div className="reg-intro-container">
           <div className="reg-intro-left">
@@ -121,10 +128,10 @@ const SellerRegistrationPage = () => {
               Apne business ko register karne ke safar mein FBR, NTN aur zaroori registration steps ko asaan tareeqay se samjhein.
             </p>
             <div className="reg-intro-highlights">
-              <span className="hl-item">🏛️ FBR Iris Step-by-Step</span>
-              <span className="hl-item">📋 Free NTN Generation</span>
-              <span className="hl-item">🏦 Sole Proprietor Bank Account</span>
-              <span className="hl-item">🌱 Cottage Industry Exemptions</span>
+              <span className="hl-item">FBR Iris Step-by-Step</span>
+              <span className="hl-item">Free NTN Generation</span>
+              <span className="hl-item">Sole Proprietor Bank Account</span>
+              <span className="hl-item">Cottage Industry Exemptions</span>
             </div>
           </div>
 
@@ -142,7 +149,6 @@ const SellerRegistrationPage = () => {
         <div className="reg-content-container">
           {/* Informational Disclaimer Notice */}
           <div className="reg-disclaimer-card" role="note">
-            <span className="disclaimer-icon" aria-hidden="true">💡</span>
             <div className="disclaimer-text">
               <strong>Taleemi Rehnumai (Educational UI Guidance):</strong> Yeh guidance Pakistani khawateen ko FBR aur basic registration samajhne ke liye tayar ki gayi hai. Yeh qanooni ya official tax advice nahi hai.
             </div>
@@ -192,7 +198,7 @@ const SellerRegistrationPage = () => {
                 <ul className="step-checklist">
                   {registrationSteps[activeTab].items.map((item, i) => (
                     <li key={i} className="step-check-item">
-                      <span className="check-bullet" aria-hidden="true">✓</span>
+                      <span className="check-bullet" aria-hidden="true">&bull;</span>
                       <span>{item}</span>
                     </li>
                   ))}
@@ -227,18 +233,17 @@ const SellerRegistrationPage = () => {
           {/* 3. Connects to backend /seller/create */}
           <section className="seller-profile-card" aria-label="Save Seller Profile for Personalization">
             <div className="profile-card-header">
-              <span className="profile-header-icon" aria-hidden="true">🌸</span>
               <div>
                 <h2 className="profile-card-title">Apna Seller Profile Save Karein</h2>
                 <p className="profile-card-sub">
-                  Apne business ka naam aur category darj karein taake Saheli aap ko personalized mashwaray de sakay.
+                  Apne business ka naam, session ID aur category darj karein taake Saheli aap ko personalized mashwaray de sakay.
                 </p>
               </div>
             </div>
 
             {saveSuccess && (
               <div className="profile-success-alert" role="status">
-                <span>✓ Mubarak! Aap ka seller profile kamiyabi se mehfooz ho gaya hai. Ab Saheli aap ke business ko yaad rakhegi.</span>
+                <span>Mubarak! Aap ka seller profile kamiyabi se mehfooz ho gaya hai. Ab Saheli aap ke business ko yaad rakhegi.</span>
               </div>
             )}
 
@@ -255,6 +260,20 @@ const SellerRegistrationPage = () => {
                   placeholder="Jaise: Hunar Crafts, Noor Baking Studio, Rangrez Silai..."
                   className="form-text-input"
                   required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label" htmlFor="seller-session-id-input">
+                  Session ID
+                </label>
+                <input 
+                  id="seller-session-id-input"
+                  type="text" 
+                  value={sessionId}
+                  onChange={(e) => setSessionId(e.target.value)}
+                  placeholder="Jaise: saheli_session_xyz123..."
+                  className="form-text-input"
                 />
               </div>
 
@@ -299,7 +318,7 @@ const SellerRegistrationPage = () => {
                   disabled={isSaving}
                   aria-busy={isSaving}
                 >
-                  {isSaving ? 'Save ho raha hai...' : 'Profile Save Karein →'}
+                  {isSaving ? 'Save ho raha hai...' : 'Profile Save Karein \u2192'}
                 </button>
               </div>
             </form>

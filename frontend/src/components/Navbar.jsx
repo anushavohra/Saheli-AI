@@ -21,18 +21,12 @@ const Navbar = ({ onOpenChat }) => {
 
   return (
     <header className="navbar-container" role="banner">
-      {/* Top Truck Art Chamakpatti Pattern Border */}
-      <div className="navbar-truck-border" aria-hidden="true"></div>
-
       <div className="navbar-content">
-        {/* Brand Wordmark matching Image 1 */}
+        {/* Brand Wordmark matching brand identity */}
         <NavLink to="/" className="brand-logo" onClick={handleNavClick}>
-          <div className="logo-flower-badge" aria-hidden="true">
-            <span>🌸</span>
-          </div>
           <div className="brand-text-block">
             <span className="brand-name font-yatra">Saheli-AI</span>
-            <span className="brand-subtext">Aapki Business Saheli</span>
+            <span className="brand-subtext font-yatra">Aapki Business Saheli</span>
           </div>
         </NavLink>
 
@@ -41,7 +35,7 @@ const Navbar = ({ onOpenChat }) => {
           <NavLink 
             to="/" 
             end 
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            className={({ isActive }) => `nav-link font-yatra ${isActive ? 'active' : ''}`}
             onClick={handleNavClick}
           >
             Home
@@ -49,7 +43,7 @@ const Navbar = ({ onOpenChat }) => {
           
           <NavLink 
             to="/dukaan-ki-baat" 
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            className={({ isActive }) => `nav-link font-yatra ${isActive ? 'active' : ''}`}
             onClick={handleNavClick}
           >
             Dukaan Ki Baat
@@ -57,7 +51,7 @@ const Navbar = ({ onOpenChat }) => {
 
           <NavLink 
             to="/seller-registration" 
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            className={({ isActive }) => `nav-link font-yatra ${isActive ? 'active' : ''}`}
             onClick={handleNavClick}
           >
             Seller Registration
@@ -65,7 +59,7 @@ const Navbar = ({ onOpenChat }) => {
 
           <NavLink 
             to="/saheli-ai" 
-            className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+            className={({ isActive }) => `nav-link font-yatra ${isActive ? 'active' : ''}`}
             onClick={handleNavClick}
           >
             Saheli Se Poocho
@@ -75,6 +69,7 @@ const Navbar = ({ onOpenChat }) => {
           <div className="mobile-cta-row">
             <Button 
               to="/saheli-ai"
+              variant="primary"
               onClick={handleNavClick}
               ariaLabel="Saheli Se Poocho"
             >
@@ -87,6 +82,7 @@ const Navbar = ({ onOpenChat }) => {
         <div className="nav-right-actions">
           <Button 
             to="/saheli-ai"
+            variant="primary"
             className="desktop-cta"
             onClick={handleNavClick}
             ariaLabel="Saheli Se Poocho"

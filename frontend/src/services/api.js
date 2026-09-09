@@ -70,12 +70,7 @@ export async function createSellerProfile(sellerData) {
     const res = await fetch(`${API_BASE_URL}/seller/create`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-  session_id: getSessionId(),
-  shop_name: sellerData.name,
-  category: sellerData.category,
-  bio: sellerData.bio
-})
+      body: JSON.stringify(sellerData)
     });
 
     if (res.ok) {
@@ -113,8 +108,7 @@ export async function submitDukaanKiBaatReview({ photo, title, description, bio 
     formData.append('title', title || '');
     formData.append('description', description || '');
     formData.append('bio', bio || '');
-    formData.append('shop_bio', bio || '');
-    formData.append('session_id', getSessionId());
+    formData.append('seller_bio', bio || '');
 
     const res = await fetch(`${API_BASE_URL}/dukan-ki-baat`, {
       method: 'POST',

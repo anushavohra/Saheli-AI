@@ -13,7 +13,7 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
     {
       id: 1,
       sender: 'saheli',
-      text: "Assalam-o-Alaikum 🌸\nMain Saheli hoon.\nAaj business mein kis cheez mein madad chahiye?"
+      text: "Assalam-o-Alaikum\nMain Saheli hoon.\nAaj business mein kis cheez mein madad chahiye?"
     }
   ]);
   const [inputText, setInputText] = useState('');
@@ -78,7 +78,6 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
         {/* Drawer Header */}
         <div className="chatbot-header">
           <div className="header-brand">
-            <span className="header-flower-icon" aria-hidden="true">🌸</span>
             <div>
               <h3 className="header-title font-yatra">SAHELI AI</h3>
               <p className="header-subtitle">Har business ko chahiye aik saheli</p>
@@ -99,7 +98,7 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
           {quickChips.map((chip, i) => (
             <button 
               key={i} 
-              type="button"
+              type="button" 
               onClick={() => handleChipClick(chip)} 
               className="chip-btn"
             >
@@ -115,9 +114,6 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
               key={msg.id} 
               className={`chat-bubble-wrapper ${msg.sender === 'user' ? 'bubble-user' : 'bubble-saheli'}`}
             >
-              {msg.sender === 'saheli' && (
-                <div className="avatar-saheli" aria-hidden="true">🌸</div>
-              )}
               <div className="chat-bubble">
                 {msg.text.split('\n').map((line, idx) => (
                   <span key={idx}>
@@ -131,7 +127,6 @@ const ChatbotDrawer = ({ isOpen, onClose, initialPrompt }) => {
 
           {isTyping && (
             <div className="chat-bubble-wrapper bubble-saheli">
-              <div className="avatar-saheli" aria-hidden="true">🌸</div>
               <div className="chat-bubble typing-indicator">
                 <span></span>
                 <span></span>

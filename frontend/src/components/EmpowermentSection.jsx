@@ -8,11 +8,7 @@ const EmpowermentSection = () => {
         <div className="ending-inner-frame">
           {/* Subtle hand-drawn border flourish */}
           <div className="ending-flourish-top" aria-hidden="true">
-            <span>🌸</span>
             <span className="flourish-divider"></span>
-            <span>🪡</span>
-            <span className="flourish-divider"></span>
-            <span>🌸</span>
           </div>
 
           <h2 className="ending-heading">
@@ -34,7 +30,7 @@ const EmpowermentSection = () => {
           </div>
 
           <div className="ending-trust-badges">
-            <span className="badge-item">🇵🇰 Pakistan Ke Hunnar Ke Liye</span>
+            <span className="badge-item">Pakistan Ke Hunnar Ke Liye</span>
             <span className="badge-sep">•</span>
             <span className="badge-item">Grounded AI Mashwara</span>
             <span className="badge-sep">•</span>

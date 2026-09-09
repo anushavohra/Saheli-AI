@@ -14,7 +14,6 @@ const HeroSection = ({ onOpenChat }) => {
               className="hero-artwork-image"
               fetchPriority="high"
             />
-            <div className="hero-artwork-vignette" aria-hidden="true"></div>
 
             {/* Overlaid Brand Identity matching Image 1 */}
             <div className="hero-overlay-content">

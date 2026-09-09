@@ -19,7 +19,7 @@ const Mascot = ({ onOpenChat }) => {
   const [isHovered, setIsHovered] = useState(false);
   
   const timerRef = useRef(null);
-  const triggerScrollRef = useRef(0);
+  const hasTriggeredRef = useRef(false);
 
   // Sync stage when route changes
   useEffect(() => {
@@ -27,54 +27,37 @@ const Mascot = ({ onOpenChat }) => {
       setStage('docked');
       if (timerRef.current) clearTimeout(timerRef.current);
     } else {
-      if (window.scrollY < 200) {
-        setStage('hidden');
-      } else if (hasIntroduced) {
+      if (hasIntroduced || hasTriggeredRef.current) {
         setStage('docked');
+      } else if (window.scrollY < 220) {
+        setStage('hidden');
       }
     }
   }, [pathname, isHomepage, hasIntroduced]);
 
-  // Handle scroll on homepage
+  // Handle scroll on homepage - fires once per scroll-past-hero event
   useEffect(() => {
     if (!isHomepage) return;
 
     const handleScroll = () => {
+      // If already introduced or currently showing intro, do not interrupt on scroll
+      if (hasTriggeredRef.current || hasIntroduced) return;
+
       const currentScroll = window.scrollY;
 
-      if (currentScroll < 150) {
-        // Returned back to top/hero
-        setStage('hidden');
-        if (timerRef.current) {
-          clearTimeout(timerRef.current);
-          timerRef.current = null;
-        }
-      } else if (currentScroll >= 200) {
-        if (!hasIntroduced && stage === 'hidden') {
-          // Trigger center introduction
-          setStage('center');
-          triggerScrollRef.current = currentScroll;
+      if (currentScroll >= 220 && stage === 'hidden') {
+        hasTriggeredRef.current = true;
+        setStage('center');
 
-          // Auto-dock after 3.5s
-          timerRef.current = setTimeout(() => {
-            setStage('docked');
-            setHasIntroduced(true);
-          }, 3500);
-        } else if (stage === 'center') {
-          // If user continues scrolling while in center intro, dock early
-          if (Math.abs(currentScroll - triggerScrollRef.current) > 120) {
-            if (timerRef.current) clearTimeout(timerRef.current);
-            setStage('docked');
-            setHasIntroduced(true);
-          }
-        } else if (hasIntroduced && stage === 'hidden') {
+        // Let the welcome message remain visible and readable (4.5 seconds) before docking
+        timerRef.current = setTimeout(() => {
           setStage('docked');
-        }
+          setHasIntroduced(true);
+        }, 4500);
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    // Run once on mount in case already scrolled
     handleScroll();
 
     return () => {
@@ -84,7 +67,7 @@ const Mascot = ({ onOpenChat }) => {
   }, [isHomepage, hasIntroduced, stage]);
 
   const handleDismissIntro = (e) => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     if (timerRef.current) clearTimeout(timerRef.current);
     setStage('docked');
     setHasIntroduced(true);
@@ -95,10 +78,8 @@ const Mascot = ({ onOpenChat }) => {
       if (timerRef.current) clearTimeout(timerRef.current);
       setStage('docked');
       setHasIntroduced(true);
-      navigate('/saheli-ai');
-    } else {
-      navigate('/saheli-ai');
     }
+    navigate('/saheli-ai');
   };
 
   if (stage === 'hidden') {
@@ -191,7 +172,7 @@ const Mascot = ({ onOpenChat }) => {
             className={`mascot-hover-tooltip ${isHovered ? 'tooltip-visible' : ''}`}
             aria-hidden="true"
           >
-            <span>Koi sawaal hai? Poochhein! 🌸</span>
+            <span>Koi sawaal hai? Poochhein!</span>
           </div>
 
           {/* Clean Mascot Portrait Stamp */}

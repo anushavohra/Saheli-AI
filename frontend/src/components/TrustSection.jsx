@@ -50,48 +50,42 @@ const categoryGuidance = [
     name: 'Jewelry',
     urduName: 'زیورات و جھمکے',
     note: 'Anti-tarnish packing, size scale, aur metal clarity.',
-    prompt: 'Handmade jewelry sell karne ke khaas tips aur packaging batao.',
-    symbol: '💍'
+    prompt: 'Handmade jewelry sell karne ke khaas tips aur packaging batao.'
   },
   {
     id: 'baking',
     name: 'Baked Goods',
     urduName: 'ہوم بیکنگ',
     note: 'Freshness date stickers, Bykea rider care, aur PFA hygiene standards.',
-    prompt: 'Home bakery business ke liye packaging aur delivery tips do.',
-    symbol: '🧁'
+    prompt: 'Home bakery business ke liye packaging aur delivery tips do.'
   },
   {
     id: 'embroidery',
     name: 'Embroidery',
     urduName: 'کڑھائی اور سلائی',
     note: 'Fabric bleeding test, inches size chart, aur handmade story.',
-    prompt: 'Embroidery aur silai collection ki marketing kaise karein?',
-    symbol: '🪡'
+    prompt: 'Embroidery aur silai collection ki marketing kaise karein?'
   },
   {
     id: 'candles',
     name: 'Candles',
     urduName: 'خوشبودار موم بتیاں',
     note: 'Burn instruction cards, fragrance notes, aur heat safety.',
-    prompt: 'Scented candles business ke liye safety labels aur marketing batao.',
-    symbol: '🕯️'
+    prompt: 'Scented candles business ke liye safety labels aur marketing batao.'
   },
   {
     id: 'crochet',
     name: 'Crochet & Knitting',
     urduName: 'اون اور بنائی',
     note: 'Yarn details, custom orders advance deposits, aur washing care.',
-    prompt: 'Crochet aur handmade knitting items ki pricing aur care kaise batayein?',
-    symbol: '🧶'
+    prompt: 'Crochet aur handmade knitting items ki pricing aur care kaise batayein?'
   },
   {
     id: 'clay',
     name: 'Clay Crafts',
     urduName: 'مٹی کا ہنر',
     note: 'Double bubble-wrap transit packing, sealing varnish, aur natural texture.',
-    prompt: 'Handmade clay pottery aur crafts ko safely kaise ship karein?',
-    symbol: '🪴'
+    prompt: 'Handmade clay pottery aur crafts ko safely kaise ship karein?'
   }
 ];
 
@@ -179,9 +173,6 @@ const TrustSection = () => {
                   }
                 }}
               >
-                <div className="craft-card-icon" aria-hidden="true">
-                  {cat.symbol}
-                </div>
                 <div className="craft-card-content">
                   <div className="craft-title-row">
                     <h4 className="craft-name">{cat.name}</h4>
