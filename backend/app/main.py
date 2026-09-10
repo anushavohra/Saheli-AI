@@ -1,20 +1,37 @@
 from fastapi import FastAPI
-from google import genai
-import os
-from dotenv import load_dotenv
-from app.database import engine, Base
-from app.models import conversation 
+from fastapi.middleware.cors import CORSMiddleware
 
+from app.database import engine, Base
+from app.routes import chat, seller, dukan_ki_baat
+
+
+# Create database tables
 Base.metadata.create_all(bind=engine)
 
-load_dotenv()
-app = FastAPI()
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
-@app.post("/chat")
-def chat(message: str):
-    response = client.models.generate_content(
-        model="gemini-3.6-flash",
-        contents=message
-    )
-    return {"reply": response.text}
+# FastAPI app
+app = FastAPI()
+
+
+# Allow React frontend to communicate with backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+# Register API routes
+app.include_router(chat.router)
+app.include_router(seller.router)
+app.include_router(dukan_ki_baat.router)
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
