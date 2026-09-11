@@ -19,7 +19,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",
         "http://127.0.0.1:5173",
-        "https://your-frontend.vercel.app",  # add your real Vercel URL once deployed
+        "https://saheli-ai-bay.vercel.app/",  # add your real Vercel URL once deployed
     ],
     allow_credentials=True,
     allow_methods=["*"],
