@@ -4,6 +4,13 @@ An AI companion for home-based women entrepreneurs in Pakistan. Built during the
 
 **har business ko chahiye aik saheli**
 
+## Live
+
+Frontend: https://saheli-ai-bay.vercel.app/saheli-ai
+Backend API docs: https://saheli-ai-h9i2.onrender.com/docs
+
+The backend link opens FastAPI's automatic API documentation, not a page meant for regular users, but it's a quick way to confirm the server is actually running and see every endpoint directly. The backend is on Render's free tier, so if nobody's used it in the last 15 minutes, the first request will take about a minute to wake up.
+
 ## Why this exists
 
 Women own only 2.4% of Pakistan's 3.2 million registered businesses. Female entrepreneurship sits at around 1%, compared to 21% for men. When we talked to women actually running home-based businesses, jewelry sellers, home bakers, people making handmade crochet and craft items, the same problem kept coming up. They know their craft. What they don't have is anyone to ask about pricing, describing a product online, or figuring out what to do next.
@@ -33,7 +40,7 @@ A short onboarding form in the seller's own language, so setup never becomes the
 
 **AI:** Groq, using `openai/gpt-oss-120b` for text conversations and `qwen/qwen3.6-27b` for the photo review feature, since that one needs a model that can actually look at an image.
 
-**Deployment:** Vercel for the frontend, Render for the backend, Neon for the database. All three run on genuinely free tiers, no credit card required. The trade-off is that Render's free tier sleeps after 15 minutes of inactivity, so the first request after a quiet period takes about a minute to wake up.
+**Deployment:** Live now. Frontend on Vercel, backend on Render, database on Neon. All three run on genuinely free tiers, no credit card required. The trade-off is that Render's free tier sleeps after 15 minutes of inactivity, so the first request after a quiet period takes about a minute to wake up.
 
 ## Project structure
 
