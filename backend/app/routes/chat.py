@@ -42,7 +42,8 @@ def chat(request: ChatRequest, db: Session = Depends(get_db)):
         past_messages = (
             db.query(Conversation)
             .filter(Conversation.session_id == session_id)
-            .order_by(Conversation.timestamp)
+            .order_by(Conversation.timestamp.desc())
+            .limit(20)
             .all()
         )
         conversation_history = "\n".join([f"{m.sender}: {m.message}" for m in past_messages])
