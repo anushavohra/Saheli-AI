@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Text
 from datetime import datetime
 from app.database import Base
 
@@ -11,6 +11,8 @@ class Seller(Base):
     category = Column(String)
     bio = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
+    conversation_summary = Column(Text, default="")
+    last_summarized_count = Column(Integer, default=0)
 
 class Listing(Base):
     __tablename__ = "listings"
