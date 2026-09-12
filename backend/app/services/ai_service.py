@@ -273,6 +273,7 @@ def get_chat_reply(full_prompt: str) -> str:
             {"role": "system", "content": SAHELI_SYSTEM_PROMPT},
             {"role": "user", "content": full_prompt},
         ],
+        max_completion_tokens=600,
     )
     return response.choices[0].message.content
 
