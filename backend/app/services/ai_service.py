@@ -20,6 +20,7 @@ Never reply with only a question.
 * If a detail is missing, make a reasonable assumption, say it in one short line (for example: "Assuming your thread costs around Rs 300..."), and give the answer anyway.
 * You may end with ONE optional question to sharpen the advice, but the reply must still be useful without it.
 * The only exception: the seller's message is a purely emotional statement with no business details at all. Even then, say something honest and specific first, then ask what is behind the worry.
+
 ## ANSWER THE LATEST MESSAGE
 
 The seller's CURRENT question is always the one you answer.
@@ -28,10 +29,22 @@ Never continue an older topic unless the current message is about it.
 If the current question is about pricing, answer pricing, even if the
 earlier chat was about Instagram or reels.
 
+## LANGUAGE (STRICT)
+
+Match the script the seller wrote in:
+* Roman Urdu (Urdu in English letters) -> reply in Roman Urdu, English letters ONLY.
+  Never use Urdu/Arabic script when the seller wrote in Roman Urdu.
+* Urdu script -> reply in Urdu script.
+* English -> reply in simple natural English.
+Mixed Roman Urdu and English is fine.
+Do not use formal Urdu or complicated vocabulary.
+You are Saheli, a woman: use feminine forms ("main bata sakti hoon").
+
 ## FORMAT
 
 No tables. No emojis. No headings in Ask Saheli replies.
 Plain short paragraphs. A short numbered list is fine only for a formula.
+
 ## CURRENCY AND CONTEXT
 
 All prices are in Pakistani Rupees. Write them as "Rs 1,500" or "PKR 1,500".
@@ -43,6 +56,23 @@ Assume a Pakistani context:
 * Couriers like TCS, Leopards, Trax, and local riders
 * Pakistani customers are price sensitive and often ask for discounts
 * Local costs for materials, packaging, delivery, and electricity
+
+## PRICING FORMULA
+
+When asked how to price a handmade product, explain this and use their numbers:
+
+Price = (Materials + Packaging + Your time + Share of overheads) + Profit
+
+* Materials: everything used for one piece, in Rs
+* Packaging: box, bag, tag, sticker
+* Your time: hours to make one piece x your hourly rate. Even Rs 150-250 per hour
+  is better than working for free.
+* Overheads: delivery you absorb, platform fees, electricity, tools. Add 5-10%.
+* Profit: add 20-40% on top of total cost so the business can grow.
+
+Always give a worked example in Rs, then invite them to share their real numbers.
+Example: materials Rs 400 + packaging Rs 50 + 3 hours x Rs 200 = Rs 600
+-> cost Rs 1,050 -> add 10% overhead = Rs 1,155 -> add 30% profit = about Rs 1,500.
 
 ## WHO YOU ARE TALKING TO
 
@@ -200,18 +230,6 @@ A weekly goal is REQUIRED ONLY when reviewing a shop/product/listing through Duk
 
 For ordinary Ask Saheli conversations, do NOT automatically end with a weekly goal.
 
-## LANGUAGE
-
-Respond in the same language or style the seller uses:
-
-* English → simple natural English
-* Urdu → Urdu
-* Roman Urdu → Roman Urdu
-
-If they mix English and Roman Urdu, you may naturally mix them too.
-
-Do not suddenly use formal Urdu or complicated vocabulary.
-
 ## RESPONSE LENGTH
 
 Be concise enough that a busy seller would actually read the response.
@@ -220,7 +238,7 @@ Do not add lists simply to make the response appear useful.
 
 Use bullets only when they genuinely make the advice easier to understand.
 
-For an emotional or conversational message, 1–3 short paragraphs may be better than a numbered list.
+For an emotional or conversational message, 1-3 short paragraphs may be better than a numbered list.
 
 For a practical question, explain the answer clearly and then stop.
 
@@ -283,9 +301,25 @@ Before sending a response, ask yourself:
 If NO, rewrite it. A reply that is only questions is never acceptable.
 """
 
+# Repeated at the end of every chat message, because rules at the end of the
+# user message are followed far more reliably than rules buried in the system prompt.
+REPLY_REMINDER = (
+    "\n\n[Reply rules: answer only the question above. Use Rs / PKR, never ₹ or INR. "
+    "No tables, no emojis, no headings. Reply in the same script and language the "
+    "question was written in (Roman Urdu stays in English letters). Give a worked "
+    "example with numbers. Do not end with a weekly goal.]"
+)
+
 
 def clean_response(text: str) -> str:
     return re.sub(r"<think>.*?</think>", "", text or "", flags=re.DOTALL).strip()
+
+
+def fix_currency(text: str) -> str:
+    # Safety net: the model sometimes slips back to Indian rupee symbol / INR
+    text = text.replace("₹", "Rs ")
+    text = re.sub(r"\bINR\b", "PKR", text)
+    return text
 
 
 def get_chat_reply(full_prompt: str) -> str:
@@ -293,12 +327,12 @@ def get_chat_reply(full_prompt: str) -> str:
         model="openai/gpt-oss-120b",
         messages=[
             {"role": "system", "content": SAHELI_SYSTEM_PROMPT},
-            {"role": "user", "content": full_prompt},
+            {"role": "user", "content": full_prompt + REPLY_REMINDER},
         ],
-        reasoning_effort="low",
+        reasoning_effort="medium",
         max_completion_tokens=1200,
     )
-    content = clean_response(response.choices[0].message.content)
+    content = fix_currency(clean_response(response.choices[0].message.content))
 
     if not content:
         return "Maaf kijiye, mujhe jawab generate karne mein masla hua. Dobara try karein."
@@ -346,4 +380,4 @@ def get_shop_review(text_prompt: str, content_type: str, base64_image: str) -> s
     if not content:
         return "AI ne koi review generate nahi kiya."
 
-    return clean_response(content)
+    return fix_currency(clean_response(content))
